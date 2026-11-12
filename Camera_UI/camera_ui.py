@@ -193,7 +193,7 @@ class CameraApp:
     def take_photo(self):
         if self.last_frame is None:
             return
-        path = os.path.join(self.save_dir, f"photo_{self.timestamp()}.png")
+        path = os.path.join(self.save_dir, f"{self.file_name_prefix}_photo_{self.timestamp()}.png")
         if cv2.imwrite(path, self.last_frame):
             self.status.set(f"Photo saved: {os.path.basename(path)}")
         else:
@@ -205,7 +205,7 @@ class CameraApp:
                 return
             h, w = self.last_frame.shape[:2]
             fps = self.fps
-            path = os.path.join(self.save_dir, f"video_{self.timestamp()}.mp4")
+            path = os.path.join(self.save_dir, f"{self.file_name_prefix}_video_{self.timestamp()}.mp4")
             writer = cv2.VideoWriter(path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (w, h))
             if not writer.isOpened():
                 messagebox.showerror("Recording failed", "Could not start recording.")
@@ -258,16 +258,23 @@ class CameraApp:
         frame_rate_box = ttk.Combobox(settings_window, textvariable=frame_rate_var, values=[5, 10, 20, 30, 60], state="readonly")
         frame_rate_box.grid(row=1, column=1, padx=5, pady=5)
         
+        # File name
+        ttk.Label(settings_window, text="File Name Prefix:").grid(row=2, column=0, padx=5, pady=5)
+        file_name_var = tk.StringVar(value="photo_")
+        file_name_entry = ttk.Entry(settings_window, textvariable=file_name_var)
+        file_name_entry.grid(row=2, column=1, padx=5, pady=5)
+        
         # Save Button
         def save_settings():
             w, h = map(int, resolution_var.get().split('x'))
             self.resolution = (w, h)
             self.fps = frame_rate_var.get()
+            self.file_name_prefix = file_name_var.get()
             if self.cap is not None:
                 self.apply_camera_settings()
             settings_window.destroy()
         
-        ttk.Button(settings_window, text="Save", command=save_settings).grid(row=2, column=0, columnspan=2, pady=10)
+        ttk.Button(settings_window, text="Save", command=save_settings).grid(row=3, column=0, columnspan=2, pady=10)
 
     def on_close(self):
         self.stop_camera()
