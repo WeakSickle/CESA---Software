@@ -1,3 +1,4 @@
 __pycache__/
 *.pyc
 compression_test_output/
+camera_settings.json
