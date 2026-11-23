@@ -17,26 +17,12 @@ import csv
 import os
 import sys
 import time
-import types
 import zipfile
 
 import cv2
 
-# Allow running without a display (e.g. over SSH on a Raspberry Pi): the GUI part
-# of camera_ui is not needed for this test, so stub it if tkinter/ImageTk is missing.
-try:
-    import tkinter  # noqa: F401
-    from PIL import ImageTk  # noqa: F401
-except Exception:
-    for name in ["tkinter", "tkinter.ttk", "tkinter.filedialog", "tkinter.messagebox", "PIL.ImageTk"]:
-        sys.modules.setdefault(name, types.ModuleType(name))
-    tk_mod = sys.modules["tkinter"]
-    tk_mod.ttk = sys.modules["tkinter.ttk"]
-    tk_mod.filedialog = sys.modules["tkinter.filedialog"]
-    tk_mod.messagebox = sys.modules["tkinter.messagebox"]
-
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from camera_ui import VideoRecorder, find_ffmpeg, human_size  # noqa: E402
+from camera_core import VideoRecorder, find_ffmpeg, human_size  # noqa: E402
 
 # (label, resolution, fps, encoder, crf, grayscale)
 TESTS = [

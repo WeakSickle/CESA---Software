@@ -34,5 +34,5 @@ if errorlevel 1 (
 )
 
 echo Starting Camera App...
-%PY% camera_ui.py
+%PY% camera_ui.py --gui
 if errorlevel 1 pause
